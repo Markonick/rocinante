@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "lambda-scraper"
+version = "0.1.0"
+description = "A project to scrape from social media etc data-sources using lambda triggered by periodic celery task. Uses FastAPI as a backend api."
+authors = ["Markonick <nicolas.markos@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "lambda_scraper"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.92.0"
+celery = "^5.2.7"
+pytest = "^7.2.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

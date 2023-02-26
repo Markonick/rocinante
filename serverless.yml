@@ -1,0 +1,80 @@
+service: ${self:custom.project}
+
+provider:
+  name: aws
+  runtime: python3.9
+  region: ${param:region}
+  tracing:
+    lambda: true
+  iam:
+    role: arn:aws:iam::001900890465:role/dashbot-lambda-exec-role
+
+functions:
+  on_demand:
+    handler: lambdas.on_demand.handler.main
+    environment:
+      ENV_PATH: .env
+    timeout: 600 # 10 minutes in seconds
+    reservedConcurrency: 10
+    url: true
+  scheduled:
+    handler: lambdas.scheduled.handler.main
+    environment:
+      ENV_PATH: .env
+    timeout: 600 # 10 minutes in seconds
+    reservedConcurrency: 10
+  tableau_token_refresh:
+    handler: lambdas.tableau_token_refresh.handler.main
+    environment:
+      ENV_PATH: .env
+    timeout: 60 # 1 minute in seconds
+    reservedConcurrency: 1
+    events:
+      - schedule: cron(0 1 * * ? *)
+
+
+package:
+  patterns:
+    - "!tests/*"
+    - "!infrastructure/**"
+    - "!node_modules/**"
+    - "!scripts/**"
+    - "!README.md"
+    - "!.pytest_cache/**"
+    - "!.git/*"
+    - "!.gitlab/**"
+    - "!.cache/**"
+    - "!.coveragerc"
+    - "!.pre-commit-config.yaml"
+    - "!.pylintrc"
+    - "!package.json"
+    - "!package-lock.json"
+    - "!.env.ci"
+    - "!.env.local"
+    - "!.env.template"
+    - "!.env.test"
+    - "!.gitlab-ci.yml"
+    - "!pre-commit-config.yaml"
+    - "!Makefile"
+    - "!tox.ini"
+    - "!pyproject.toml"
+    - "!chamber"
+    - .env
+
+plugins:
+  - serverless-python-requirements
+
+useDotenv: true
+
+custom:
+  project: dashbot
+
+  pythonRequirements:
+    slim: true
+    fileName: requirements/base.txt
+    noDeploy:
+      - pytest
+
+params:
+    default:
+      region: eu-west-1
