@@ -9,9 +9,9 @@ packages = [{include = "lambda_scraper"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-fastapi = "^0.92.0"
-celery = "^5.2.7"
 pytest = "^7.2.1"
+pandas = "^1.5.3"
+snscrape = "^0.6.0.20230303"
 
 
 [build-system]
